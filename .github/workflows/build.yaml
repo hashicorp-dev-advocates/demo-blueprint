@@ -1,0 +1,27 @@
+---
+name: Test Blueprint
+on:
+  push:
+    branches:
+      - "*"
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  build:
+    name: Test Blueprints
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 3
+
+      - name: Install Shipyard
+        run: |
+          curl https://shipyard.run/install | bash
+
+      - name: Run tests
+        run: |
+          shipyard test .
