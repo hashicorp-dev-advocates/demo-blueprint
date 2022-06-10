@@ -1,4 +1,8 @@
-exec_local "generate_certs" {
+exec_remote "generate_certs" {
+  image {
+    name = "shipyardrun/tools:v0.7.0"
+  }
+
   cmd = "shipyard"
   args = [
     "connector",
@@ -10,8 +14,18 @@ exec_local "generate_certs" {
     "./root.key",
     "--dns-name",
     "127.0.0.1:9443",
-    "${data("nomad_data")}",
+    ".",
   ]
 
-  working_directory = "${shipyard()}/certs"
+  working_directory = "/data"
+
+  volume {
+    source      = data("waypoint_data")
+    destination = "/data"
+  }
+
+  volume {
+    source      = "${shipyard()}/certs"
+    destination = "/certs"
+  }
 }

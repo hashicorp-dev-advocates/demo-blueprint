@@ -3,7 +3,7 @@ variable "controller_image" {
 }
 
 template "controller_pack" {
-  depends_on = ["exec_local.generate_certs"]
+  depends_on = ["exec_remote.generate_certs"]
   disabled   = var.install_controller != "docker"
 
   source = <<-EOF
