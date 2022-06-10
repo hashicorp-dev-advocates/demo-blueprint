@@ -3,8 +3,24 @@ title: Demo Stack
 author: Nic Jackson
 slug: demo-stack
 ---
-This blueprint create the necessary components for the Demo app for HashiConf 2022, the various components can be 
+Shipyard blueprint to create the necessary components for the Demo app for HashiConf 2022, the various components can be 
 disabled by configuring the environment variables in `main.hcl`.
+
+## Pre-requisites
+* Shipyard: https://shipyard.run
+* Docker: https://docker.io
+
+## Running the blueprint
+
+```shell
+shipyard run .
+```
+
+## Cleanup
+
+```shell
+shipyard destroy
+```
 
 # Components
 * Vault (container)
@@ -91,7 +107,7 @@ pass: admin
 http://localhost:9090
 ```
 
-## Example Application
+# Example Application
 A simple two tier application API -> Payments has been deployed to Nomad. The application uses Consul service mesh for 
 communication and access to the API is provided through Consul Ingress Gateway.
 
@@ -99,4 +115,36 @@ The ingress gateway expects that a HOST header with the value `api.default` is s
 
 ```
 curl http://localhost:18081 -H "HOST: api.default"
+```
+
+# Consul Release Controller
+Consul Release Controller has been installed on Nomad and has been exposed locally at `https://localhost:9443` using a self
+signed certificate.
+
+## Listing Releases
+List the currently configured releases and show the status
+
+```
+curl https://localhost:9443/v1/releases -k
+```
+
+## Creating a New Release
+Register a new release with the releaser and manage the referenced Nomad jobs
+
+```
+curl -XPOST https://localhost:9443/v1/releases -k -d @./modules/example_app/jobs/valid_nomad_release.json
+```
+
+## Getting a release details
+Get the details for the named release
+
+```
+curl https://localhost:9443/v1/releases/payments -k
+```
+
+## Deleting a release details
+Remove a release from the controller and stop managing it's Nomad jobs
+
+```
+curl -XDELETE https://localhost:9443/v1/releases/payments -k
 ```
