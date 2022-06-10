@@ -54,20 +54,35 @@ template "copy_certs" {
   source = <<-EOF
     #!/bin/sh
 
-    cp ${file_dir()}/certs/* ${data("waypoint_data")}
+    cp /certs/* /data
   EOF
 
   destination = "${data("waypoint_data")}/copy_certs.sh"
 }
 
-exec_local "copy_certs" {
+exec_remote "copy_certs" {
   depends_on = ["template.copy_certs"]
-  cmd        = "sh"
+
+  image {
+    name = "alpine:latest"
+  }
+
+  cmd = "sh"
   args = [
     "copy_certs.sh",
   ]
 
-  working_directory = data("waypoint_data")
+  volume {
+    source      = data("waypoint_data")
+    destination = "/data"
+  }
+
+  volume {
+    source      = "${file_dir()}/certs"
+    destination = "/certs"
+  }
+
+  working_directory = "/data"
 }
 
 # If this tag is updated then the waypoint-server job needs the corresponding change
@@ -82,7 +97,7 @@ variable "cn_nomad_load_image" {
 
 # Build a custom ODR with our certs
 container "waypoint-odr" {
-  depends_on = ["exec_local.copy_certs"]
+  depends_on = ["exec_remote.copy_certs"]
 
   network {
     name = "network.dc1"
@@ -99,7 +114,7 @@ container "waypoint-odr" {
 
 
 container "registry" {
-  depends_on = ["exec_local.copy_certs"]
+  depends_on = ["exec_remote.copy_certs"]
   network {
     name       = "network.dc1"
     ip_address = "10.5.0.100"
