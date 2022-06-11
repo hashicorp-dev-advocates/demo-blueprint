@@ -17,7 +17,7 @@ template "download_plugin" {
       unzip waypoint-plugin-noop_linux_$${SHIPYARD_ARCH}.zip
   EOF
 
-  destination = "${data("waypoint_data")}/download_plugin.sh"
+  destination = "${var.cn_nomad_client_host_volume.source}/download_plugin.sh"
 }
 
 # build a custom waypoint ODR image that contains the insecure registry certs
@@ -46,43 +46,13 @@ template "waypoint_odr" {
     RUN cp waypoint-plugin-noop /kaniko/.config/waypoint/plugins/waypoint-plugin-noop
   EOF
 
-  destination = "${data("waypoint_data")}/Dockerfile.odr"
+  destination = "${var.cn_nomad_client_host_volume.source}/Dockerfile.odr"
 }
 
-# copy the certs for the registry 
-template "copy_certs" {
-  source = <<-EOF
-    #!/bin/sh
-
-    cp /certs/* /data
-  EOF
-
-  destination = "${data("waypoint_data")}/copy_certs.sh"
-}
-
-exec_remote "copy_certs" {
-  depends_on = ["template.copy_certs"]
-
-  image {
-    name = "alpine:latest"
-  }
-
-  cmd = "sh"
-  args = [
-    "copy_certs.sh",
-  ]
-
-  volume {
-    source      = data("waypoint_data")
-    destination = "/data"
-  }
-
-  volume {
-    source      = "${file_dir()}/certs"
-    destination = "/certs"
-  }
-
-  working_directory = "/data"
+copy "waypoint_root_ca" {
+  source      = "${file_dir()}/../../certs"
+  destination = var.cn_nomad_client_host_volume.source
+  permissions = "0644"
 }
 
 # If this tag is updated then the waypoint-server job needs the corresponding change
@@ -97,7 +67,7 @@ variable "cn_nomad_load_image" {
 
 # Build a custom ODR with our certs
 container "waypoint-odr" {
-  depends_on = ["exec_remote.copy_certs"]
+  depends_on = ["copy.waypoint_root_ca"]
 
   network {
     name = "network.dc1"
@@ -105,16 +75,28 @@ container "waypoint-odr" {
 
   build {
     file    = "./Dockerfile.odr"
-    context = data("waypoint_data")
+    context = var.cn_nomad_client_host_volume.source
     tag     = var.waypoint_odr_tag
   }
 
   command = ["/kaniko/waypoint"]
 }
 
+certificate_leaf "registry_leaf" {
+  depends_on = ["copy.waypoint_root_ca"]
+
+  ca_cert = "${var.cn_nomad_client_host_volume.source}/root.cert"
+  ca_key  = "${var.cn_nomad_client_host_volume.source}/root.key"
+
+  ip_addresses = ["10.5.0.100", "127.0.0.1"]
+  dns_names    = ["registry.container.shipyard.run"]
+
+  output = var.cn_nomad_client_host_volume.source
+}
 
 container "registry" {
-  depends_on = ["exec_remote.copy_certs"]
+  depends_on = ["certificate_leaf.registry_leaf"]
+
   network {
     name       = "network.dc1"
     ip_address = "10.5.0.100"
@@ -125,14 +107,14 @@ container "registry" {
   }
 
   volume {
-    source      = data("waypoint_data")
+    source      = var.cn_nomad_client_host_volume.source
     destination = "/certs"
   }
 
   env_var = {
     REGISTRY_HTTP_ADDR            = "0.0.0.0:443"
-    REGISTRY_HTTP_TLS_CERTIFICATE = "/certs/leaf.cert"
-    REGISTRY_HTTP_TLS_KEY         = "/certs/leaf.key"
+    REGISTRY_HTTP_TLS_CERTIFICATE = "/certs/registry_leaf.cert"
+    REGISTRY_HTTP_TLS_KEY         = "/certs/registry_leaf.key"
   }
 
   port {
@@ -156,7 +138,7 @@ template "waypoint-pack" {
       /pack/nomad-pack-community-registry-main/packs/waypoint
   EOF
 
-  destination = "${data("waypoint_data")}/install_waypoint.sh"
+  destination = "${var.cn_nomad_client_host_volume.source}/install_waypoint.sh"
 }
 
 exec_remote "waypoint_pack" {
@@ -182,7 +164,7 @@ exec_remote "waypoint_pack" {
   }
 
   volume {
-    source      = data("waypoint_data")
+    source      = var.cn_nomad_client_host_volume.source
     destination = "/scripts"
   }
 
@@ -195,7 +177,7 @@ exec_remote "waypoint_pack" {
 }
 
 output "WAYPOINT_TOKEN" {
-  value = "$(cat ${data("waypoint")}/waypoint.token)"
+  value = "$(cat ${var.cn_nomad_client_host_volume.source}/waypoint.token)"
 }
 
 nomad_ingress "waypoint-ui" {

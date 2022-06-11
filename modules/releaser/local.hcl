@@ -1,9 +1,9 @@
 output "TLS_CERT" {
-  value = "${data("nomad_data")}/leaf.cert"
+  value = "${var.cn_nomad_client_host_volume.source}/releaser_leaf.cert"
 }
 
 output "TLS_KEY" {
-  value = "${data("nomad_data")}/leaf.key"
+  value = "${var.cn_nomad_client_host_volume.source}/releaser_leaf.key"
 }
 
 nomad_job "controller-local" {

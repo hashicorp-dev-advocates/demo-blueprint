@@ -1,31 +1,11 @@
-exec_remote "generate_certs" {
-  image {
-    name = "shipyardrun/tools:v0.7.0"
-  }
+certificate_leaf "releaser_leaf" {
+  depends_on = ["copy.waypoint_root_ca"]
 
-  cmd = "shipyard"
-  args = [
-    "connector",
-    "generate-certs",
-    "--leaf",
-    "--root-ca",
-    "./root.cert",
-    "--root-key",
-    "./root.key",
-    "--dns-name",
-    "127.0.0.1:9443",
-    ".",
-  ]
+  ca_cert = "${var.cn_nomad_client_host_volume.source}/root.cert"
+  ca_key  = "${var.cn_nomad_client_host_volume.source}/root.key"
 
-  working_directory = "/data"
+  ip_addresses = ["127.0.0.1"]
+  dns_names    = ["127.0.0.1:9443"]
 
-  volume {
-    source      = data("waypoint_data")
-    destination = "/data"
-  }
-
-  volume {
-    source      = "${shipyard()}/certs"
-    destination = "/certs"
-  }
+  output = var.cn_nomad_client_host_volume.source
 }

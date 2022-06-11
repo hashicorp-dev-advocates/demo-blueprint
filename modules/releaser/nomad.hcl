@@ -3,18 +3,18 @@ variable "controller_image" {
 }
 
 template "controller_pack" {
-  depends_on = ["exec_remote.generate_certs"]
+  depends_on = ["certificate_leaf.releaser_leaf"]
   disabled   = var.install_controller != "docker"
 
   source = <<-EOF
     #!/bin/sh
     cat <<-EOH > /scripts/release_controller.hcl
     tls_cert = <<-EOT
-    $(cat /certs/leaf.cert)
+    $(cat /certs/releaser_leaf.cert)
     EOT
     
     tls_key = <<-EOT
-    $(cat /certs/leaf.key)
+    $(cat /certs/releaser_leaf.key)
     EOT
     EOH
 
@@ -50,7 +50,7 @@ exec_remote "controller_pack" {
   }
 
   volume {
-    source      = data("nomad_data")
+    source      = var.cn_nomad_client_host_volume.source
     destination = "/certs"
   }
 
