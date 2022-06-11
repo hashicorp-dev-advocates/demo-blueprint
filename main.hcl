@@ -50,6 +50,10 @@ variable "install_example_app" {
   default = true
 }
 
+variable "install_minecraft" {
+  default = true
+}
+
 module "consul_nomad" {
   depends_on = ["container.waypoint-odr"]
   source     = "github.com/shipyard-run/blueprints?ref=06822657c974816597dacecad6ee3a90af6809e3/modules//consul-nomad"
@@ -58,19 +62,19 @@ module "consul_nomad" {
 
 module "monitoring" {
   depends_on = ["module.consul_nomad"]
-  disabled   = !var.install_monitoring
+  disabled   = ! var.install_monitoring
 
   source = "./modules/monitoring"
 }
 
 module "waypoint" {
-  disabled = !var.install_waypoint
+  disabled = ! var.install_waypoint
 
   source = "./modules/waypoint"
 }
 
 module "example_app" {
-  disabled = !var.install_example_app
+  disabled = ! var.install_example_app
 
   source = "./modules/example_app"
 }
@@ -83,9 +87,15 @@ module "controller" {
 }
 
 module "vault" {
-  disabled = !var.install_vault
+  disabled = ! var.install_vault
 
   source = "./modules/vault"
+}
+
+module "minecraft" {
+  disabled = ! var.install_minecraft
+
+  source = "./modules/minecraft"
 }
 
 #module "boundary" {
