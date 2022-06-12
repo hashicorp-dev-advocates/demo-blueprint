@@ -23,6 +23,17 @@ template "download_plugin" {
 # build a custom waypoint ODR image that contains the insecure registry certs
 template "waypoint_odr" {
   source = <<-EOF
+    FROM alpine:latest as setup
+
+    RUN apk --no-cache add ca-certificates \
+      && update-ca-certificates
+
+    COPY ./root.cert  /registry.pem
+    RUN cat /registry.pem >> /etc/ssl/certs/ca-certificates.crt
+
+    COPY ./download_plugin.sh /download_plugin.sh
+    RUN sh /download_plugin.sh
+
     FROM hashicorp/waypoint-odr:latest
     SHELL ["/kaniko/bin/sh", "-c"]
 
@@ -35,15 +46,10 @@ template "waypoint_odr" {
     ENV TMPDIR /kaniko/tmp
     ENV container docker
 
-    COPY ./root.cert  /kaniko/ssl/certs/registry.pem
-    RUN cat /kaniko/ssl/certs/registry.pem >> /kaniko/ssl/certs/ca-certificates.crt
+    COPY --from=setup /etc/ssl/certs/ca-certificates.crt /kaniko/ssl/certs/ca-certificates.crt
 
-    COPY ./download_plugin.sh /kaniko/bin/download_plugin.sh
-    RUN ls -las /kaniko/bin
-    RUN sh /kaniko/bin/download_plugin.sh
-
-    RUN mkdir -p /kaniko/.config/waypoint/plugins/
-    RUN cp waypoint-plugin-noop /kaniko/.config/waypoint/plugins/waypoint-plugin-noop
+    #RUN mkdir -p /kaniko/.config/waypoint/plugins/
+    COPY --from=setup /waypoint-plugin-noop /kaniko/.config/waypoint/plugins/waypoint-plugin-noop
   EOF
 
   destination = "${var.cn_nomad_client_host_volume.source}/Dockerfile.odr"
