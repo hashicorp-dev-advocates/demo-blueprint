@@ -36,6 +36,32 @@ job "waypoint-server" {
       port = "server"
       tags = ["waypoint"]
     }
+    
+    #task "volume-permissions" {
+    #  driver = "docker"
+
+    #  volume_mount {
+    #    volume      = "data"
+    #    destination = "/data"
+    #    read_only   = false
+    #  }
+
+    #  config {
+    #    image        = "busybox:latest"
+    #    command      = "sh"
+    #    args         = ["-c", "chmod 777 /data"]
+    #  }
+
+    #  resources {
+    #    cpu    = 200
+    #    memory = 128
+    #  }
+
+    #  lifecycle {
+    #    hook    = "prestart"
+    #    sidecar = false
+    #  }
+    #}
 
     task "server" {
       driver = "docker"
@@ -49,7 +75,7 @@ job "waypoint-server" {
           "run",
           "-accept-tos",
           "-vv",
-          "-db=/home/waypoint/data.db",
+          "-db=/data/data.db",
           "-listen-grpc=0.0.0.0:9701",
           "-listen-http=0.0.0.0:9702"
         ]
@@ -58,6 +84,11 @@ job "waypoint-server" {
       resources {
         cpu    = 500 # MHz
         memory = 128 # MB
+      }
+
+      volume_mount {
+        volume      = "data"
+        destination = "/data"
       }
     }
 

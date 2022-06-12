@@ -23,12 +23,17 @@ variable "cn_nomad_client_config" {
 variable "cn_nomad_client_host_volume" {
   default = {
     name        = "waypoint"
-    source      = data_with_permissions("waypoint", "0777")
+    source      = data("waypoint")
     destination = "/data"
     type        = "bind"
   }
 }
 
+variable "cn_nomad_load_image" {
+  default = "shipyard.run/localcache/waypoint-odr:0.0.7"
+}
+
+# Set these variables to false to disable a particular module
 variable "install_monitoring" {
   default = true
 }
@@ -55,6 +60,11 @@ module "consul_nomad" {
   source     = "github.com/shipyard-run/blueprints?ref=d9446bfc97759e66b82b1fed60fd70c94ab98238/modules//consul-nomad"
   #source = "/home/nicj/go/src/github.com/shipyard-run/blueprints/modules/consul-nomad"
 }
+
+#copy "test" {
+#  source      = "./certs"
+#  destination = var.cn_nomad_client_host_volume.source
+#}
 
 module "monitoring" {
   depends_on = ["module.consul_nomad"]

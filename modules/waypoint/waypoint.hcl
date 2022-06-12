@@ -52,17 +52,11 @@ template "waypoint_odr" {
 copy "waypoint_root_ca" {
   source      = "${file_dir()}/../../certs"
   destination = var.cn_nomad_client_host_volume.source
-  permissions = "0644"
 }
 
 # If this tag is updated then the waypoint-server job needs the corresponding change
 variable "waypoint_odr_tag" {
   default = "0.0.7"
-}
-
-# If this tag is updated then the waypoint-server job needs the corresponding change
-variable "cn_nomad_load_image" {
-  default = "shipyard.run/localcache/waypoint-odr:0.0.7"
 }
 
 # Build a custom ODR with our certs
