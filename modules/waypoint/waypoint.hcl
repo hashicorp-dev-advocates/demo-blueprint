@@ -118,10 +118,6 @@ container "registry" {
   }
 }
 
-# Override the Docker config to add the custom registry
-variable "cn_nomad_docker_insecure_registries" {
-  default = ["10.5.0.100"]
-}
 
 template "waypoint-pack" {
   source = <<-EOF

@@ -33,6 +33,11 @@ variable "cn_nomad_load_image" {
   default = "shipyard.run/localcache/waypoint-odr:0.0.7"
 }
 
+# Override the Docker config to add the custom registry
+variable "cn_nomad_docker_insecure_registries" {
+  default = ["10.5.0.100"]
+}
+
 # Set these variables to false to disable a particular module
 variable "install_monitoring" {
   default = true
