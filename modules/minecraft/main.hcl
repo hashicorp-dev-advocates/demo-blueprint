@@ -18,13 +18,20 @@ variable "minecraft_worlds_path" {
   default = "${data("minecraft")}/worlds"
 }
 
-
 variable "minecraft_config_path" {
   default = "${data("minecraft")}/config"
 }
 
+variable "minecraft_server_icon_path" {
+  default = "${data("minecraft")}/server-icon.png"
+}
+
 variable "minecraft_network" {
   default = var.cn_network
+}
+
+variable "geyser_version" {
+  default = "v0.0.2"
 }
 
 container "minecraft" {
@@ -44,6 +51,11 @@ container "minecraft" {
   volume {
     source      = var.minecraft_plugins_path
     destination = "/minecraft/plugins"
+  }
+
+  volume {
+    source      = var.minecraft_server_icon_path
+    destination = "/minecraft/server-icon.png"
   }
 
   volume {
@@ -96,5 +108,23 @@ container "minecraft" {
   env {
     key   = "RCON_ENABLED"
     value = "true"
+  }
+}
+
+container "geyser" {
+  network {
+    name = "network.${var.minecraft_network}"
+  }
+
+  image {
+    name = "hashicraft/geyser:${var.geyser_version}"
+  }
+
+  command = ["/start.sh", "--remote.address", "minecraft.container.shipyard.run"]
+
+  port {
+    local  = 19132
+    remote = 19132
+    host   = 19132
   }
 }
