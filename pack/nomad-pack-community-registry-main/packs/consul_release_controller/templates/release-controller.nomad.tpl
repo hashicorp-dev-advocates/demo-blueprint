@@ -17,6 +17,17 @@ job "release-controller" {
     service {
       name = "consul-release-controller"
       port = "server"
+
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "prometheus"
+              local_bind_port = 9090
+            }
+          } 
+        }
+      }
     }
 
     task "release-controller" {

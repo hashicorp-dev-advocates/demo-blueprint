@@ -66,11 +66,6 @@ module "consul_nomad" {
   #source = "/home/nicj/go/src/github.com/shipyard-run/blueprints/modules/consul-nomad"
 }
 
-#copy "test" {
-#  source      = "./certs"
-#  destination = var.cn_nomad_client_host_volume.source
-#}
-
 module "monitoring" {
   depends_on = ["module.consul_nomad"]
   disabled   = !var.install_monitoring

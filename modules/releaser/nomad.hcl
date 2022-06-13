@@ -1,5 +1,5 @@
 variable "controller_image" {
-  default = "docker.io/nicholasjackson/consul-release-controller:3c108be.dev"
+  default = "docker.io/nicholasjackson/consul-release-controller:fd00230.dev"
 }
 
 template "controller_pack" {
@@ -8,7 +8,10 @@ template "controller_pack" {
 
   source = <<-EOF
     #!/bin/sh
+
     cat <<-EOH > /scripts/release_controller.hcl
+    controller_image = "${var.controller_image}"
+
     tls_cert = <<-EOT
     $(cat /certs/releaser_leaf.cert)
     EOT
