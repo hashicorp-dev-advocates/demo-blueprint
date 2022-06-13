@@ -38,6 +38,38 @@ variable "cn_nomad_docker_insecure_registries" {
   default = ["10.5.0.100"]
 }
 
+variable "minecraft_mods_path" {
+  default = "${home()}/minecraft/mods"
+}
+
+variable "minecraft_world_path" {
+  default = "${home()}/minecraft/world"
+}
+
+variable "minecraft_config_path" {
+  default = "${home()}/minecraft/config"
+}
+
+variable "minecraft_server_icon_path" {
+  default = "${home()}/minecraft"
+}
+
+variable "restic_repository" {
+  default = "${home()}/backup"
+}
+
+variable "restic_password" {
+  default = "password"
+}
+
+variable "restic_backup_path" {
+  default = "${home()}/minecraft"
+}
+
+variable "restic_backup_interval" {
+  default = 300
+}
+
 # Set these variables to false to disable a particular module
 variable "install_monitoring" {
   default = true
@@ -60,6 +92,14 @@ variable "install_example_app" {
   default = true
 }
 
+variable "install_minecraft" {
+  default = true
+}
+
+variable "install_restic" {
+  default = true
+}
+
 module "consul_nomad" {
   depends_on = ["container.waypoint-odr"]
   source     = "github.com/shipyard-run/blueprints?ref=d9446bfc97759e66b82b1fed60fd70c94ab98238/modules//consul-nomad"
@@ -68,19 +108,19 @@ module "consul_nomad" {
 
 module "monitoring" {
   depends_on = ["module.consul_nomad"]
-  disabled   = !var.install_monitoring
+  disabled   = ! var.install_monitoring
 
   source = "./modules/monitoring"
 }
 
 module "waypoint" {
-  disabled = !var.install_waypoint
+  disabled = ! var.install_waypoint
 
   source = "./modules/waypoint"
 }
 
 module "example_app" {
-  disabled = !var.install_example_app
+  disabled = ! var.install_example_app
 
   source = "./modules/example_app"
 }
@@ -93,9 +133,21 @@ module "controller" {
 }
 
 module "vault" {
-  disabled = !var.install_vault
+  disabled = ! var.install_vault
 
   source = "./modules/vault"
+}
+
+module "minecraft" {
+  disabled = ! var.install_minecraft
+
+  source = "./modules/minecraft"
+}
+
+module "restic" {
+  disabled = ! var.install_restic
+
+  source = "./modules/restic"
 }
 
 #module "boundary" {
