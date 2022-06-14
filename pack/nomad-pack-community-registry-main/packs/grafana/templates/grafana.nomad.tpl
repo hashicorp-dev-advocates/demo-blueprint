@@ -44,13 +44,30 @@ job [[ template "job_name" . ]] {
         image = "grafana/grafana:[[ .grafana.version_tag ]]"
         volumes = [
           "local/datasources:/etc/grafana/provisioning/datasources",
-          "local/dashboards:/etc/grafana/provisioning/dashboards",
+          "local/provisioning_dashboards:/etc/grafana/provisioning/dashboards",
+          "local/dashboards:/etc/dashboards",
         ]
       }
 
       resources {
         cpu    = [[ .grafana.resources.cpu ]]
         memory = [[ .grafana.resources.memory ]]
+      }
+
+      template {
+        change_mode   = "signal"
+        change_signal = "SIGHUP"
+        destination   = "local/provisioning_dashboards/main.yml"
+        data = <<-EOF
+          apiVersion: 1
+
+          providers:
+            - name: dashboards
+              type: file
+              updateIntervalSeconds: 30
+              options:
+                path: /etc/dashboards
+        EOF
       }
 
       [[- if .grafana.datasources ]]
@@ -61,6 +78,21 @@ job [[ template "job_name" . ]] {
         destination   = "local/datasources/[[ $datasource.name ]].yml"
         data = <<EOF
 [[ $datasource.data ]]
+        EOF
+      }
+      [[- end]]
+      [[- end]]
+
+      [[- if .grafana.dashboards ]]
+      [[- range $idx, $dashboard := .grafana.dashboards ]]
+      template {
+        change_mode   = "signal"
+        change_signal = "SIGHUP"
+        left_delimiter = "#{{"
+        right_delimiter = "}}"
+        destination   = "local/dashboards/[[ $dashboard.name ]].json"
+        data = <<EOF
+[[ $dashboard.data ]]
         EOF
       }
       [[- end]]

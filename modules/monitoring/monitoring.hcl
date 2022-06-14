@@ -1,9 +1,32 @@
+template "grafana_config" {
+
+  source = <<-EOF
+    upstreams = [{
+      name = "prometheus"
+      port = 9090
+      },
+      {
+        name = "loki"
+        port = 3100
+    }]
+
+    dashboards = [{
+      name = "payments"
+      data = <<EOT
+      ${file("../example_app/jobs/payments-dashboard.json")}
+      EOT
+    }]
+  EOF
+
+  destination = "${data("monitoring_data")}/grafana.hcl"
+}
+
 template "monitoring_pack" {
   source = <<-EOF
     #!/bin/bash -e
 
     nomad-pack run -f /pack/prometheus-pack.hcl /pack/nomad-pack-community-registry-main/packs/prometheus
-    nomad-pack run -f /pack/grafana.hcl /pack/nomad-pack-community-registry-main/packs/grafana
+    nomad-pack run -f /scripts/grafana.hcl /pack/nomad-pack-community-registry-main/packs/grafana
     nomad-pack run -f /pack/loki.hcl /pack/nomad-pack-community-registry-main/packs/loki
   EOF
 
@@ -11,7 +34,7 @@ template "monitoring_pack" {
 }
 
 exec_remote "pack" {
-  depends_on = ["nomad_cluster.local", "template.monitoring_pack"]
+  depends_on = ["nomad_cluster.local", "template.monitoring_pack", "template.grafana_config"]
 
   image {
     name = "shipyardrun/hashicorp-tools:v0.8.0"
