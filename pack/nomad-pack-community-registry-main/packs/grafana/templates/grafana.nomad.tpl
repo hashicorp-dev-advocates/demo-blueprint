@@ -46,6 +46,7 @@ job [[ template "job_name" . ]] {
           "local/datasources:/etc/grafana/provisioning/datasources",
           "local/provisioning_dashboards:/etc/grafana/provisioning/dashboards",
           "local/dashboards:/etc/dashboards",
+          "local/config/custom.ini:/etc/grafana/grafana.ini",
         ]
       }
 
@@ -67,6 +68,15 @@ job [[ template "job_name" . ]] {
               updateIntervalSeconds: 30
               options:
                 path: /etc/dashboards
+        EOF
+      }
+      
+      template {
+        change_mode   = "signal"
+        change_signal = "SIGHUP"
+        destination   = "local/config/custom.ini"
+        data = <<-EOF
+[[ .grafana.custom_config ]]
         EOF
       }
 

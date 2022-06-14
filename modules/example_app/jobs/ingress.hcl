@@ -11,9 +11,39 @@ job "ingress" {
         to     = 18080
       }
 
+      port "grafana" {
+        static = 18081
+        to     = 18081
+      }
+
+      port "prometheus" {
+        static = 18082
+        to     = 18082
+      }
+
+      port "releaser" {
+        static = 18083
+        to     = 18083
+      }
+
       port "metrics" {
         to = "9102"
       }
+    }
+
+    service {
+      name = "ingress-grafana"
+      port = "grafana"
+    }
+
+    service {
+      name = "ingress-prometheus"
+      port = "prometheus"
+    }
+
+    service {
+      name = "ingress-releaser"
+      port = "releaser"
     }
 
     service {
@@ -62,6 +92,36 @@ job "ingress" {
 
               service {
                 name  = "api"
+                hosts = ["*"]
+              }
+            }
+
+            listener {
+              port     = 18081
+              protocol = "http"
+
+              service {
+                name  = "grafana"
+                hosts = ["*"]
+              }
+            }
+
+            listener {
+              port     = 18082
+              protocol = "http"
+
+              service {
+                name  = "prometheus"
+                hosts = ["*"]
+              }
+            }
+
+            listener {
+              port     = 18083
+              protocol = "http"
+
+              service {
+                name  = "consul-release-controller"
                 hosts = ["*"]
               }
             }

@@ -8,7 +8,7 @@ container "browserless" {
   }
 
   env {
-    key = "MAX_CONCURRENT_SESSIONS"
+    key   = "MAX_CONCURRENT_SESSIONS"
     value = "10"
   }
 }
@@ -23,13 +23,13 @@ container "app" {
   }
 
   env {
-    key = "BROWSERLESS"
+    key   = "BROWSERLESS"
     value = "ws://browserless.container.shipyard.run:3000"
   }
 
   port {
-    local = "8080"
-    host = "28080"
+    local  = "8080"
+    host   = "28080"
     remote = "8080"
   }
 }

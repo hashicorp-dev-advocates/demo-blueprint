@@ -99,3 +99,9 @@ variable "resources" {
     memory = 256
   }
 }
+
+variable "custom_config" {
+  description = "A custom config to override the default config"
+  type        = string
+  default     = ""
+}
