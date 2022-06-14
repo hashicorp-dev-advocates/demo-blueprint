@@ -1,5 +1,5 @@
 variable "controller_image" {
-  default = "docker.io/nicholasjackson/consul-release-controller:8a61881.dev"
+  default = "docker.io/nicholasjackson/consul-release-controller:ca90d3b.dev"
 }
 
 template "controller_pack" {
