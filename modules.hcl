@@ -40,7 +40,7 @@ module "vault" {
   source = "./modules/vault"
 }
 
-module "vault" {
+module "browserless" {
   disabled = !var.install_browserless
 
   source = "./modules/browserless"

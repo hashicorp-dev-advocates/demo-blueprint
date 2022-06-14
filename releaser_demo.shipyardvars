@@ -1,3 +1,4 @@
 # Runs a lite version of the blueprint without Minecraft
 install_minecraft=false
 install_browserless=false
+install_vault=false
