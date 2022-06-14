@@ -60,6 +60,12 @@ variable "install_example_app" {
   default = true
 }
 
+# Run the browserless app to enable screenshots from URLs
+# used by Projector to display browsers in Minecraft
+variable "install_browserless" {
+  default = true
+}
+
 module "consul_nomad" {
   depends_on = ["container.waypoint-odr"]
   source     = "github.com/shipyard-run/blueprints?ref=d9446bfc97759e66b82b1fed60fd70c94ab98238/modules//consul-nomad"
@@ -96,6 +102,12 @@ module "vault" {
   disabled = !var.install_vault
 
   source = "./modules/vault"
+}
+
+module "vault" {
+  disabled = !var.install_browserless
+
+  source = "./modules/browserless"
 }
 
 #module "boundary" {
