@@ -26,17 +26,22 @@ variable "minecraft_server_icon_path" {
   default = "${data("minecraft")}/server-icon.png"
 }
 
-variable "minecraft_network" {
-  default = var.cn_network
+variable "minecraft_geyser_version" {
+  default = "v0.0.2"
 }
 
-variable "geyser_version" {
-  default = "v0.0.2"
+variable "minecraft_memory" {
+  default = "2G"
+}
+
+# Location of a tar archive that contains the world to restore to the server
+variable "minecraft_world_backup" {
+  default = ""
 }
 
 container "minecraft" {
   network {
-    name = "network.${var.minecraft_network}"
+    name = "network.${var.cn_network}"
   }
 
   image {
@@ -87,7 +92,7 @@ container "minecraft" {
 
   env {
     key   = "JAVA_MEMORY"
-    value = "8G"
+    value = var.minecraft_memory
   }
 
   env {
@@ -109,15 +114,22 @@ container "minecraft" {
     key   = "RCON_ENABLED"
     value = "true"
   }
+
+  env {
+    key   = "WORLD_BACKUP"
+    value = var.minecraft_world_backup
+  }
 }
 
 container "geyser" {
+  disabled = !var.minecraft_enable_backups
+
   network {
-    name = "network.${var.minecraft_network}"
+    name = "network.${var.cn_network}"
   }
 
   image {
-    name = "hashicraft/geyser:${var.geyser_version}"
+    name = "hashicraft/geyser:${var.minecraft_geyser_version}"
   }
 
   command = ["/start.sh", "--remote.address", "minecraft.container.shipyard.run"]
