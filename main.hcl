@@ -38,6 +38,38 @@ variable "cn_nomad_docker_insecure_registries" {
   default = ["10.5.0.100"]
 }
 
+variable "minecraft_mods_path" {
+  default = "${home()}/minecraft/mods"
+}
+
+variable "minecraft_world_path" {
+  default = "${home()}/minecraft/world"
+}
+
+variable "minecraft_config_path" {
+  default = "${home()}/minecraft/config"
+}
+
+variable "minecraft_server_icon_path" {
+  default = "${home()}/minecraft"
+}
+
+variable "restic_repository" {
+  default = "${home()}/backup"
+}
+
+variable "restic_password" {
+  default = "password"
+}
+
+variable "restic_backup_path" {
+  default = "${home()}/minecraft"
+}
+
+variable "restic_backup_interval" {
+  default = 300
+}
+
 # Set these variables to false to disable a particular module
 variable "install_monitoring" {
   default = true
@@ -108,6 +140,18 @@ module "vault" {
   disabled = !var.install_browserless
 
   source = "./modules/browserless"
+}
+
+module "minecraft" {
+  disabled = !var.install_minecraft
+
+  source = "./modules/minecraft"
+}
+
+module "restic" {
+  disabled = !var.install_restic
+
+  source = "./modules/restic"
 }
 
 #module "boundary" {

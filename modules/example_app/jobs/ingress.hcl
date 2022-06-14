@@ -44,6 +44,27 @@ job "ingress" {
             listener {
               port     = 18080
               protocol = "http"
+
+              service {
+                name  = "server-side-renderer"
+                hosts = ["server-side-renderer.ingress.shipyard.run"]
+              }
+
+              service {
+                name  = "grafana"
+                hosts = ["grafana.ingress.shipyard.run"]
+              }
+
+              service {
+                name  = "prometheus"
+                hosts = ["prometheus.ingress.shipyard.run"]
+              }
+
+              service {
+                name  = "consul-release-controller"
+                hosts = ["consul-release-controller.ingress.shipyard.run"]
+              }
+
               service {
                 name  = "api"
                 hosts = ["*"]

@@ -51,7 +51,7 @@ nomad_ingress "ingress" {
   port {
     local  = 18080
     remote = "inbound"
-    host   = 18081
+    host   = 80
   }
 }
 
