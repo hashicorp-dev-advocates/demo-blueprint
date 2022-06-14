@@ -1,5 +1,5 @@
 variable "controller_image" {
-  default = "docker.io/nicholasjackson/consul-release-controller:fd00230.dev"
+  default = "docker.io/nicholasjackson/consul-release-controller:8a61881.dev"
 }
 
 template "controller_pack" {
@@ -70,25 +70,6 @@ exec_remote "controller_pack" {
   }
 }
 
-nomad_ingress "controller-docker" {
-  disabled = var.install_controller != "docker"
-
-  cluster = var.cn_nomad_cluster_name
-  job     = "release-controller"
-  group   = "release-controller"
-  task    = "release-controller"
-
-  network {
-    name = "network.dc1"
-  }
-
-  port {
-    local  = 9443
-    remote = "server"
-    host   = 9443
-  }
-}
-
 output "consul_release_controller_addr" {
-  value = "https://localhost:9443"
+  value = "http://releases.ingress.shipyard.run"
 }

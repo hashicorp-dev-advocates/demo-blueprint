@@ -52,7 +52,7 @@ variable "minecraft_server_icon_path" {
 }
 
 variable "minecraft_enable_backups" {
-  default = true
+  default = false
 }
 
 variable "minecraft_enable_geyser" {

@@ -44,37 +44,3 @@ exec_remote "pack" {
     value = "http://server.local.nomad-cluster.shipyard.run:4646"
   }
 }
-
-nomad_ingress "grafana" {
-  cluster = var.cn_nomad_cluster_name
-  job     = "grafana"
-  group   = "grafana"
-  task    = "grafana"
-
-  network {
-    name = "network.dc1"
-  }
-
-  port {
-    local  = 3000
-    remote = "http"
-    host   = 3000
-  }
-}
-
-nomad_ingress "prometheus" {
-  cluster = var.cn_nomad_cluster_name
-  job     = "prometheus"
-  group   = "prometheus"
-  task    = "prometheus"
-
-  network {
-    name = "network.dc1"
-  }
-
-  port {
-    local  = 9090
-    remote = "http"
-    host   = 9090
-  }
-}

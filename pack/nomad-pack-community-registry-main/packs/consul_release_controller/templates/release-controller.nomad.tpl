@@ -8,15 +8,15 @@ job "release-controller" {
 
     network {
       mode = "bridge"
-
-      port "server" {
-        to     = "9443"
+      
+      port "http" {
+        to = 8080
       }
     }
 
     service {
       name = "consul-release-controller"
-      port = "server"
+      port = "8080"
 
       connect {
         sidecar_service {
@@ -50,7 +50,6 @@ job "release-controller" {
       }
 
       config {
-        ports = ["server"]
         image = [[ .consul_release_controller.controller_image | quote]]
         
         volumes = [
@@ -65,6 +64,7 @@ job "release-controller" {
         TLS_KEY = "/certs/key.pem" 
         CONSUL_HTTP_ADDR = [[ .consul_release_controller.consul_http_addr | quote]]
         NOMAD_ADDR = [[ .consul_release_controller.nomad_addr | quote]]
+        HTTP_API_BIND_ADDRESS = "0.0.0.0"
       }
 
       resources {

@@ -6,7 +6,7 @@ job "ingress" {
 
     network {
       mode = "bridge"
-      port "inbound" {
+      port "http" {
         static = 18080
         to     = 18080
       }
@@ -46,11 +46,6 @@ job "ingress" {
               protocol = "http"
 
               service {
-                name  = "server-side-renderer"
-                hosts = ["server-side-renderer.ingress.shipyard.run"]
-              }
-
-              service {
                 name  = "grafana"
                 hosts = ["grafana.ingress.shipyard.run"]
               }
@@ -62,7 +57,7 @@ job "ingress" {
 
               service {
                 name  = "consul-release-controller"
-                hosts = ["consul-release-controller.ingress.shipyard.run"]
+                hosts = ["releaser.ingress.shipyard.run"]
               }
 
               service {

@@ -120,7 +120,7 @@ container "registry" {
   port {
     local  = 443
     remote = 443
-    host   = 443
+    host   = 1443
   }
 }
 
