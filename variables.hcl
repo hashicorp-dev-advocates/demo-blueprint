@@ -80,7 +80,7 @@ variable "minecraft_restic_version" {
 }
 
 variable "minecraft_restic_backup_path" {
-  default = "${data("minecraft")}"
+  default = "${file_dir()}/minecraft"
 }
 
 variable "minecraft_restic_backup_interval" {
