@@ -27,7 +27,7 @@ variable "minecraft_server_icon_path" {
 }
 
 variable "minecraft_geyser_version" {
-  default = "v0.0.2"
+  default = "v0.0.3"
 }
 
 variable "minecraft_memory" {
