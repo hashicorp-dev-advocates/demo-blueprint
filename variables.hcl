@@ -75,9 +75,14 @@ variable "minecraft_restic_backup_interval" {
   default = 300
 }
 
-# World archive to restore to server, only restores when ./minecraft folder is empty
+# World archive to restore to server, only restores when ./minecraft/world folder is empty
 variable "minecraft_world_backup" {
   default = "https://github.com/hashicorp-dev-advocates/demo-blueprint/releases/download/v0.1.0/hashiconf.tar.gz"
+}
+
+# Mods archive to restore to server, only restores when ./minecraft/mods folder is empty
+variable "minecraft_mods_backup" {
+  default = "https://github.com/hashicorp-dev-advocates/demo-blueprint/releases/download/v0.1.0/mods.tar.gz"
 }
 
 # Set these variables to false to disable a particular module

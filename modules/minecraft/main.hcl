@@ -119,6 +119,31 @@ container "minecraft" {
     key   = "WORLD_BACKUP"
     value = var.minecraft_world_backup
   }
+
+  env {
+    key   = "MODS_BACKUP"
+    value = var.minecraft_mods_backup
+  }
+
+  env {
+    key   = "PROJECTOR_render"
+    value = "http://localhost:28080/image"
+  }
+
+  env {
+    key   = "PROJECTOR_nomad"
+    value = "http://localhost:28080/image?url=http%3A//server.local.nomad-cluster.shipyard.run%3A4646"
+  }
+
+  env {
+    key   = "PROJECTOR_consul"
+    value = "http://localhost:28080/image?url=http%3A//consul.container.shipyard.run%3A8500"
+  }
+
+  env {
+    key   = "PROJECTOR_grafana"
+    value = "http://localhost:28080/image?url=http%3A//1.client.local.nomad-cluster.ingress.shipyard.run%3A18081"
+  }
 }
 
 container "geyser" {
