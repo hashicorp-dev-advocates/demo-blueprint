@@ -90,6 +90,12 @@ container "minecraft" {
     host   = 27015
   }
 
+  port {
+    local  = 19132
+    remote = 19132
+    host   = 19132
+  }
+
   env {
     key   = "JAVA_MEMORY"
     value = var.minecraft_memory
@@ -146,22 +152,13 @@ container "minecraft" {
   }
 }
 
-container "geyser" {
+sidecar "geyser" {
   disabled = !var.minecraft_enable_backups
-
-  network {
-    name = "network.${var.cn_network}"
-  }
+  target   = "container.minecraft"
 
   image {
     name = "hashicraft/geyser:${var.minecraft_geyser_version}"
   }
 
   command = ["/start.sh", "--remote.address", "minecraft.container.shipyard.run"]
-
-  port {
-    local  = 19132
-    remote = 19132
-    host   = 19132
-  }
 }
