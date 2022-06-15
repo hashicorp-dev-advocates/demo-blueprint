@@ -19,7 +19,7 @@ variable "cn_nomad_client_config" {
 variable "cn_nomad_client_host_volume" {
   default = {
     name        = "waypoint"
-    source      = data("waypoint")
+    source      = data_with_permissions("waypoint", "0777")
     destination = "/data"
     type        = "bind"
   }
