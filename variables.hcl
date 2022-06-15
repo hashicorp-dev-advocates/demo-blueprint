@@ -19,7 +19,7 @@ variable "cn_nomad_client_config" {
 variable "cn_nomad_client_host_volume" {
   default = {
     name        = "waypoint"
-    source      = data("waypoint")
+    source      = data_with_permissions("waypoint", "0777")
     destination = "/data"
     type        = "bind"
   }
@@ -60,11 +60,31 @@ variable "minecraft_enable_geyser" {
 }
 
 variable "minecraft_restic_repository" {
-  default = "${file_dir()}/backups/backup"
+  default = ""
+}
+
+variable "minecraft_restic_key" {
+  default = ""
+}
+
+variable "minecraft_restic_secret" {
+  default = ""
 }
 
 variable "minecraft_restic_password" {
-  default = "password"
+  default = ""
+}
+
+variable "minecraft_restic_version" {
+  default = "v0.0.1"
+}
+
+variable "minecraft_restic_backup_path" {
+  default = "${file_dir()}/minecraft"
+}
+
+variable "minecraft_restic_backup_interval" {
+  default = 1200
 }
 
 variable "minecraft_restic_backup_path" {
@@ -75,9 +95,18 @@ variable "minecraft_restic_backup_interval" {
   default = 300
 }
 
-# World archive to restore to server, only restores when ./minecraft folder is empty
+variable "render_uri" {
+  default = "http://localhost:28080"
+}
+
+# World archive to restore to server, only restores when ./minecraft/world folder is empty
 variable "minecraft_world_backup" {
   default = "https://github.com/hashicorp-dev-advocates/demo-blueprint/releases/download/v0.1.0/hashiconf.tar.gz"
+}
+
+# Mods archive to restore to server, only restores when ./minecraft/mods folder is empty
+variable "minecraft_mods_backup" {
+  default = "https://github.com/hashicorp-dev-advocates/demo-blueprint/releases/download/v0.1.0/mods.tar.gz"
 }
 
 # Set these variables to false to disable a particular module

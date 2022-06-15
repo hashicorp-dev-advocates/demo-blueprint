@@ -13,7 +13,7 @@ prometheus_group_services = [{
 prometheus_task_app_prometheus_yaml = <<EOF
 ---
 global:
-  scrape_interval: 30s
+  scrape_interval: 10s
   evaluation_interval: 3s
 rule_files:
   - rules.yml

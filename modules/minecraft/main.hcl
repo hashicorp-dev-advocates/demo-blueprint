@@ -144,13 +144,34 @@ container "minecraft" {
   env {
     key   = "RELEASER_ADDR"
     value = "http://1.client.local.nomad-cluster.shipyard.run:18083"
+    key   = "MODS_BACKUP"
+    value = var.minecraft_mods_backup
+  }
+
+  env {
+    key   = "PROJECTOR_render"
+    value = "${var.render_uri}/image"
+  }
+
+  env {
+    key   = "PROJECTOR_nomad"
+    value = "${var.render_uri}/image?url=http%3A//server.local.nomad-cluster.shipyard.run%3A4646"
+  }
+
+  env {
+    key   = "PROJECTOR_consul"
+    value = "${var.render_uri}/image?url=http%3A//consul.container.shipyard.run%3A8500"
+  }
+
+  env {
+    key   = "PROJECTOR_grafana"
+    value = "${var.render_uri}/image?url=http%3A//1.client.local.nomad-cluster.ingress.shipyard.run%3A18081"
   }
 }
 
 sidecar "geyser" {
-  disabled = ! var.minecraft_enable_backups
-
-  target = "container.minecraft"
+  disabled = !var.minecraft_enable_backups
+  target   = "container.minecraft"
 
   image {
     name = "hashicraft/geyser:${var.minecraft_geyser_version}"

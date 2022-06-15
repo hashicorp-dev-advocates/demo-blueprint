@@ -1,0 +1,4 @@
+# Runs the production version of the demo
+render_uri="http://hashiconf.hashicraft.com:28080"
+minecraft_memory="6G"
+minecraft_enable_backups=true
