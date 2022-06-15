@@ -147,6 +147,11 @@ container "minecraft" {
   }
 
   env {
+    key   = "WHISKERS_ADDR"
+    value = "http://1.client.local.nomad-cluster.shipyard.run:18084"
+  }
+
+  env {
     key   = "MODS_BACKUP"
     value = var.minecraft_mods_backup
   }
