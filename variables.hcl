@@ -60,11 +60,31 @@ variable "minecraft_enable_geyser" {
 }
 
 variable "minecraft_restic_repository" {
-  default = "${file_dir()}/backups/backup"
+  default = ""
+}
+
+variable "minecraft_restic_key" {
+  default = ""
+}
+
+variable "minecraft_restic_secret" {
+  default = ""
 }
 
 variable "minecraft_restic_password" {
-  default = "password"
+  default = ""
+}
+
+variable "minecraft_restic_version" {
+  default = "v0.0.1"
+}
+
+variable "minecraft_restic_backup_path" {
+  default = "${data("minecraft")}"
+}
+
+variable "minecraft_restic_backup_interval" {
+  default = 1200
 }
 
 variable "minecraft_restic_backup_path" {

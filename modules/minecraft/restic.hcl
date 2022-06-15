@@ -1,22 +1,3 @@
-variable "minecraft_restic_version" {
-  default = "v0.0.1"
-}
-
-variable "minecraft_restic_backup_path" {
-  default = "${data("minecraft")}"
-}
-
-variable "minecraft_restic_backup_interval" {
-  default = 300
-}
-
-variable "minecraft_restic_repository" {
-  default = "${data("restic")}"
-}
-
-variable "minecraft_restic_password" {
-  default = "password"
-}
 
 container "restic" {
   disabled = !var.minecraft_enable_backups
@@ -47,5 +28,20 @@ container "restic" {
   env {
     key   = "RESTIC_REPOSITORY"
     value = var.minecraft_restic_repository
+  }
+
+  env {
+    key   = "RESTIC_PASSWORD"
+    value = var.minecraft_restic_password
+  }
+
+  env {
+    key   = "AWS_ACCESS_KEY_ID"
+    value = var.minecraft_restic_key
+  }
+
+  env {
+    key   = "AWS_SECRET_ACCESS_KEY"
+    value = var.minecraft_restic_secret
   }
 }
