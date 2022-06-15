@@ -92,22 +92,22 @@ job "ingress" {
 
               service {
                 name  = "grafana"
-                hosts = ["grafana.ingress.shipyard.run"]
+                hosts = ["grafana.ingress.shipyard.run", "grafana.hashiconf.hashicraft.com"]
               }
 
               service {
                 name  = "prometheus"
-                hosts = ["prometheus.ingress.shipyard.run"]
+                hosts = ["prometheus.ingress.shipyard.run", "prometheus.hashiconf.hashicraft.com"]
               }
 
               service {
                 name  = "consul-release-controller"
-                hosts = ["releaser.ingress.shipyard.run"]
+                hosts = ["releaser.ingress.shipyard.run", "releaser.hashiconf.hashicraft.com"]
               }
 
               service {
                 name  = "finicky-whiskers"
-                hosts = ["whiskers.ingress.shipyard.run"]
+                hosts = ["whiskers.ingress.shipyard.run", "whiskers.hashiconf.hashicraft.com"]
               }
 
               service {
