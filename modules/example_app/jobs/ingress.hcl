@@ -31,6 +31,11 @@ job "ingress" {
         to     = 18083
       }
 
+      port "whiskers" {
+        static = 18084
+        to     = 18084
+      }
+
       port "metrics" {
         to = "9102"
       }
@@ -49,6 +54,11 @@ job "ingress" {
     service {
       name = "ingress-releaser"
       port = "releaser"
+    }
+
+    service {
+      name = "ingress-whiskers"
+      port = "whiskers"
     }
 
     service {
@@ -96,6 +106,11 @@ job "ingress" {
               }
 
               service {
+                name  = "finicky-whiskers"
+                hosts = ["whiskers.ingress.shipyard.run"]
+              }
+
+              service {
                 name  = "api"
                 hosts = ["*"]
               }
@@ -127,6 +142,16 @@ job "ingress" {
 
               service {
                 name  = "consul-release-controller"
+                hosts = ["*"]
+              }
+            }
+
+            listener {
+              port     = 18084
+              protocol = "http"
+
+              service {
+                name  = "finicky-whiskers"
                 hosts = ["*"]
               }
             }

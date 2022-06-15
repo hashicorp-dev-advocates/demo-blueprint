@@ -5,7 +5,6 @@ network "dc1" {
 module "consul_nomad" {
   depends_on = ["container.waypoint-odr"]
   source     = "github.com/shipyard-run/blueprints?ref=d9446bfc97759e66b82b1fed60fd70c94ab98238/modules//consul-nomad"
-  #source = "/home/nicj/go/src/github.com/shipyard-run/blueprints/modules/consul-nomad"
 }
 
 module "monitoring" {
@@ -50,6 +49,12 @@ module "minecraft" {
   disabled = !var.install_minecraft
 
   source = "./modules/minecraft"
+}
+
+module "whiskers" {
+  disabled = !var.install_whiskers
+
+  source = "./modules/whiskers"
 }
 
 #module "boundary" {

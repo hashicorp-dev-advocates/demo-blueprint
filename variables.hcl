@@ -107,6 +107,11 @@ variable "install_minecraft" {
   default = true
 }
 
+## Run Finicky Whiskers
+variable "install_whiskers" {
+  default = true
+}
+
 # Run the browserless app to enable screenshots from URLs
 # used by Projector to display browsers in Minecraft
 variable "install_browserless" {
