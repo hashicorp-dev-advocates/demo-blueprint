@@ -91,9 +91,10 @@ container "minecraft" {
   }
 
   port {
-    local  = 19132
-    remote = 19132
-    host   = 19132
+    local    = 19132
+    remote   = 19132
+    host     = 19132
+    protocol = "udp"
   }
 
   env {
@@ -178,7 +179,7 @@ container "minecraft" {
 }
 
 sidecar "geyser" {
-  disabled = ! var.minecraft_enable_backups
+  disabled = !var.minecraft_enable_backups
   target   = "container.minecraft"
 
   image {
