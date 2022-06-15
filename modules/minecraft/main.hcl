@@ -127,22 +127,22 @@ container "minecraft" {
 
   env {
     key   = "PROJECTOR_render"
-    value = "http://localhost:28080/image"
+    value = "${var.render_uri}/image"
   }
 
   env {
     key   = "PROJECTOR_nomad"
-    value = "http://localhost:28080/image?url=http%3A//server.local.nomad-cluster.shipyard.run%3A4646"
+    value = "${var.render_uri}/image?url=http%3A//server.local.nomad-cluster.shipyard.run%3A4646"
   }
 
   env {
     key   = "PROJECTOR_consul"
-    value = "http://localhost:28080/image?url=http%3A//consul.container.shipyard.run%3A8500"
+    value = "${var.render_uri}/image?url=http%3A//consul.container.shipyard.run%3A8500"
   }
 
   env {
     key   = "PROJECTOR_grafana"
-    value = "http://localhost:28080/image?url=http%3A//1.client.local.nomad-cluster.ingress.shipyard.run%3A18081"
+    value = "${var.render_uri}/image?url=http%3A//1.client.local.nomad-cluster.ingress.shipyard.run%3A18081"
   }
 }
 

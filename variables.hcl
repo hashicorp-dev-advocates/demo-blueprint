@@ -75,6 +75,10 @@ variable "minecraft_restic_backup_interval" {
   default = 300
 }
 
+variable "render_uri" {
+  default = "http://localhost:28080"
+}
+
 # World archive to restore to server, only restores when ./minecraft/world folder is empty
 variable "minecraft_world_backup" {
   default = "https://github.com/hashicorp-dev-advocates/demo-blueprint/releases/download/v0.1.0/hashiconf.tar.gz"
