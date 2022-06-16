@@ -3,15 +3,17 @@ network "dc1" {
 }
 
 module "consul_nomad" {
+  disabled = !var.install_nomad
+
   depends_on = ["container.waypoint-odr"]
   source     = "github.com/shipyard-run/blueprints?ref=d9446bfc97759e66b82b1fed60fd70c94ab98238/modules//consul-nomad"
 }
 
 module "monitoring" {
-  depends_on = ["module.consul_nomad"]
-  disabled   = !var.install_monitoring
+  disabled = !var.install_monitoring
 
-  source = "./modules/monitoring"
+  depends_on = ["module.consul_nomad"]
+  source     = "./modules/monitoring"
 }
 
 module "waypoint" {
@@ -27,8 +29,7 @@ module "example_app" {
 }
 
 module "controller" {
-  depends_on = ["module.consul_nomad"]
-  disabled   = var.install_controller == ""
+  disabled = var.install_controller == ""
 
   source = "./modules/releaser"
 }

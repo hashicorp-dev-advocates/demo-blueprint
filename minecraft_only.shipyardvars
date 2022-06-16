@@ -1,0 +1,11 @@
+# Runs a lite version of the blueprint without MineCraft
+install_minecraft=true
+
+install_browserless=false
+install_vault=false
+install_whiskers=false
+install_controller=""
+install_nomad=false
+install_example_app=false
+install_monitoring=false
+install_waypoint=false
