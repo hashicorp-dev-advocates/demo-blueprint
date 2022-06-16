@@ -9,19 +9,19 @@ module "consul_nomad" {
 
 module "monitoring" {
   depends_on = ["module.consul_nomad"]
-  disabled   = !var.install_monitoring
+  disabled   = ! var.install_monitoring
 
   source = "./modules/monitoring"
 }
 
 module "waypoint" {
-  disabled = !var.install_waypoint
+  disabled = ! var.install_waypoint
 
   source = "./modules/waypoint"
 }
 
 module "example_app" {
-  disabled = !var.install_example_app
+  disabled = ! var.install_example_app
 
   source = "./modules/example_app"
 }
@@ -34,27 +34,33 @@ module "controller" {
 }
 
 module "vault" {
-  disabled = !var.install_vault
+  disabled = ! var.install_vault
 
   source = "./modules/vault"
 }
 
 module "browserless" {
-  disabled = !var.install_browserless
+  disabled = ! var.install_browserless
 
   source = "./modules/browserless"
 }
 
 module "minecraft" {
-  disabled = !var.install_minecraft
+  disabled = ! var.install_minecraft
 
   source = "./modules/minecraft"
 }
 
 module "whiskers" {
-  disabled = !var.install_whiskers
+  disabled = ! var.install_whiskers
 
   source = "./modules/whiskers"
+}
+
+module "scoreboard" {
+  disabled = ! var.install_scoreboard
+
+  source = "./modules/scoreboard"
 }
 
 #module "boundary" {

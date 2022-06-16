@@ -153,6 +153,11 @@ container "minecraft" {
   }
 
   env {
+    key   = "SCOREBOARD_ADDR"
+    value = "http://scoreboard.container.shipyard.run:4000"
+  }
+
+  env {
     key   = "MODS_BACKUP"
     value = var.minecraft_mods_backup
   }
@@ -179,7 +184,7 @@ container "minecraft" {
 }
 
 sidecar "geyser" {
-  disabled = !var.minecraft_enable_backups
+  disabled = ! var.minecraft_enable_backups
   target   = "container.minecraft"
 
   image {

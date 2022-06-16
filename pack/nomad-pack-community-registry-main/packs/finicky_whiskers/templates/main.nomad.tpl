@@ -70,6 +70,9 @@ job "finicky-whiskers" {
       connect {
         sidecar_service {
           proxy {
+            config {
+              protocol = "tcp"
+            }
           }
         }
       }
