@@ -41,7 +41,7 @@ ROLE_ID=$(boundary roles create -name="admin" \
 # Add grant strings
 boundary roles add-grants \
     -grant="id=*;type=*;actions=*" \
-    -id=r_4fqtPAKYvD \
+    -id=${ROLE_ID} \
     -recovery-config="./config/recovery.hcl" \
     -format="json" | jq
 
