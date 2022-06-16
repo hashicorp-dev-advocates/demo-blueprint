@@ -41,7 +41,7 @@ exec_remote "whiskers_pack" {
   depends_on = ["nomad_cluster.local", "template.whiskers_pack"]
 
   image {
-    name = "shipyardrun/hashicorp-tools:v0.8.0"
+    name = "shipyardrun/hashicorp-tools:v0.9.0"
   }
 
   network {

@@ -34,7 +34,7 @@ exec_remote "controller_pack" {
   disabled   = var.install_controller != "docker"
 
   image {
-    name = "shipyardrun/hashicorp-tools:v0.8.0"
+    name = "shipyardrun/hashicorp-tools:v0.9.0"
   }
 
   network {

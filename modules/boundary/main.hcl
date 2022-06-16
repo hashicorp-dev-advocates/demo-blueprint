@@ -14,7 +14,7 @@ exec_remote "boundary-setup" {
   depends_on = ["module.boundary"] # fix this
 
   image {
-    name = "shipyardrun/hashicorp-tools:v0.8.0"
+    name = "shipyardrun/hashicorp-tools:v0.9.0"
   }
 
   network {
@@ -23,19 +23,19 @@ exec_remote "boundary-setup" {
 
   cmd = "/bin/bash"
   args = [
-    "./config.sh"
+    "/config/config.sh"
   ]
 
   # Mount a volume containing the config
   volume {
-    source      = data("config")
+    source      = "./config"
     destination = "/config"
   }
 
-  working_directory = "/config"
+  working_directory = "/"
 
   env {
     key   = "BOUNDARY_ADDR"
-    value = "http://boundary.shipyard.run:9200"
+    value = "http://boundary.container.shipyard.run:9200"
   }
 }

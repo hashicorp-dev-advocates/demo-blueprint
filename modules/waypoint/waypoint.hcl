@@ -141,7 +141,7 @@ exec_remote "waypoint_pack" {
   depends_on = ["nomad_cluster.local"]
 
   image {
-    name = "shipyardrun/hashicorp-tools:v0.8.0"
+    name = "shipyardrun/hashicorp-tools:v0.9.0"
   }
 
   network {

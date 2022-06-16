@@ -52,7 +52,7 @@ exec_remote "pack" {
   depends_on = ["nomad_cluster.local", "template.monitoring_pack", "template.grafana_config"]
 
   image {
-    name = "shipyardrun/hashicorp-tools:v0.8.0"
+    name = "shipyardrun/hashicorp-tools:v0.9.0"
   }
 
   network {
