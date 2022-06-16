@@ -27,7 +27,7 @@ variable "minecraft_server_icon_path" {
 }
 
 variable "minecraft_geyser_version" {
-  default = "v0.0.3"
+  default = "v0.0.2"
 }
 
 variable "minecraft_memory" {
@@ -178,6 +178,11 @@ container "minecraft" {
   env {
     key   = "WHISKERS_ADDR"
     value = "http://1.client.local.nomad-cluster.shipyard.run:18084"
+  }
+
+  env {
+    key   = "SCOREBOARD_ADDR"
+    value = "http://scoreboard.container.shipyard.run:4000"
   }
 
   env {

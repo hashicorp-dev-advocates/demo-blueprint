@@ -110,7 +110,7 @@ variable "install_minecraft" {
   default = true
 }
 
-## Run Finicky Whiskers
+## Run Finicky Whiskers and Scoreboard
 variable "install_whiskers" {
   default = true
 }

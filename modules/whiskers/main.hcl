@@ -1,3 +1,33 @@
+exec_remote "redis-defaults" {
+  depends_on = ["container.consul"]
+
+  image {
+    name = "consul:1.12.0"
+  }
+
+  network {
+    name = "network.dc1"
+  }
+
+  cmd = "/bin/sh"
+  args = [
+    "set_defaults.sh"
+  ]
+
+  # Mount a volume containing the config
+  volume {
+    source      = "${file_dir()}/consul_config"
+    destination = "/config"
+  }
+
+  working_directory = "/config"
+
+  env {
+    key   = "CONSUL_HTTP_ADDR"
+    value = "http://consul.container.shipyard.run:8500"
+  }
+}
+
 template "whiskers_pack" {
   source = <<-EOF
     #!/bin/bash -e
