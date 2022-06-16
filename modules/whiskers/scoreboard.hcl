@@ -4,12 +4,12 @@ container "scoreboard" {
   }
 
   image {
-    name = "hashicraft/finicky-scoreboard:v0.0.2"
+    name = "hashicraft/finicky-scoreboard:v0.0.3"
   }
 
   port {
-    local  = 8080
-    remote = 8080
+    local  = 4000
+    remote = 4000
     host   = 4000
   }
 }

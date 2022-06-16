@@ -182,7 +182,7 @@ container "minecraft" {
 
   env {
     key   = "SCOREBOARD_ADDR"
-    value = "http://scoreboard.container.shipyard.run:8080"
+    value = "http://scoreboard.container.shipyard.run:4000"
   }
 
   env {
