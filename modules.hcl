@@ -58,8 +58,8 @@ module "whiskers" {
   source = "./modules/whiskers"
 }
 
-#module "boundary" {
-#  disabled = var.install_controller == ""
-#
-#  source = "./modules/releaser"
-#}
+module "boundary" {
+ disabled = !var.install_boundary
+
+ source = "./modules/boundary"
+}

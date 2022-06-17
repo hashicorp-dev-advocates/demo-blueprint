@@ -32,9 +32,9 @@ shipyard destroy
 * Prometheus (nomad)
 * Grafana (nomad)
 * Example App (nomad)
+* Boundary
 
 # Todo
-* Boundary
 * Minecraft server
 
 # Nomad
