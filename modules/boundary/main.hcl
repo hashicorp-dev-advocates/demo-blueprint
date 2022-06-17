@@ -11,7 +11,7 @@ variable "network" {
 }
 
 exec_remote "boundary-setup" {
-  depends_on = ["module.boundary"]
+  depends_on = ["module.boundary_install"]
 
   image {
     name = "shipyardrun/hashicorp-tools:v0.9.0"
