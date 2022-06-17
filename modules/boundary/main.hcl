@@ -1,5 +1,5 @@
-module "boundary" {
-    source = "github.com/devops-rob/shipyard-blueprints/modules//boundary"
+module "boundary_install" {
+  source = "github.com/devops-rob/shipyard-blueprints?ref=fbe41a3661166f0599ec3c75fa8fc8617fe01cfd/modules//boundary"
 }
 
 variable "boundary_version" {
