@@ -151,6 +151,16 @@ container "minecraft" {
   }
 
   env {
+    key   = "SPAWN_NPCS"
+    value = "true"
+  }
+
+  env {
+    key   = "SPAWN_ANIMALS"
+    value = "true"
+  }
+
+  env {
     key   = "WORLD_BACKUP"
     value = var.minecraft_world_backup
   }
@@ -277,7 +287,7 @@ template "geyser_config" {
 }
 
 sidecar "geyser" {
-  disabled = !var.minecraft_enable_geyser
+  disabled = ! var.minecraft_enable_geyser
   target   = "container.minecraft"
 
   image {
