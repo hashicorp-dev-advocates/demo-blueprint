@@ -29,7 +29,7 @@ module "example_app" {
 }
 
 module "controller" {
-  disabled = !var.install_controller
+  disabled = var.install_controller == ""
 
   source = "./modules/releaser"
 }
