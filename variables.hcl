@@ -114,6 +114,11 @@ variable "install_boundary" {
   default = true
 }
 
+variable "install_cts" {
+  default = true
+}
+
+
 ## Run Finicky Whiskers and Scoreboard
 variable "install_whiskers" {
   default = true
