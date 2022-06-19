@@ -79,6 +79,30 @@ variable "minecraft_mods_backup" {
   default = "https://github.com/hashicorp-dev-advocates/demo-blueprint/releases/download/v0.1.0/mods.tar.gz"
 }
 
+variable "boundary_auth_method" {
+  default = "password"
+}
+
+variable "boundary_organization" {
+  default = "hashicorp"
+}
+
+variable "boundary_admin_user" {
+  default = "admin"
+}
+
+variable "boundary_admin_role" {
+  default = "admin"
+}
+
+variable "boundary_admin_login" {
+  default = "admin"
+}
+
+variable "boundary_admin_password" {
+  default = "password"
+}
+
 # Set these variables to false to disable a particular module
 variable "install_nomad" {
   default = true
@@ -119,6 +143,9 @@ variable "install_whiskers" {
   default = true
 }
 
+variable "install_rift" {
+  default = true
+}
 
 # Run the browserless app to enable screenshots from URLs
 # used by Projector to display browsers in Minecraft
