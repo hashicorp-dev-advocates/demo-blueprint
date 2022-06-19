@@ -25,15 +25,14 @@ variable "cn_nomad_client_host_volume" {
   }
 }
 
-variable "cn_nomad_load_image" {
-  default = "shipyard.run/localcache/waypoint-odr:0.0.7"
-}
+//variable "cn_nomad_load_image" {
+//  default = "shipyard.run/localcache/waypoint-odr:0.0.7"
+//}
 
 # Override the Docker config to add the custom registry
 variable "cn_nomad_docker_insecure_registries" {
   default = ["10.5.0.100"]
 }
-
 
 variable "minecraft_mods_path" {
   default = "${file_dir()}/minecraft/mods"

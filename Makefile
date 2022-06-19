@@ -16,3 +16,6 @@ restore:
 
 run:
 	shipyard run --vars-file=./live_env.shipyardvars .
+
+dev:
+	LOG_LEVEL=debug shipyard run --vars-file=./releaser_demo.shipyardvars .
