@@ -27,8 +27,7 @@ driver "terraform" {
 
 task {
  name        = "cts-boundary"
- module      = "hashicorp-dev-advocates/cts/boundary"
-version      = "1.0.0" 
+ module      = "/consul-terraform-sync/config/terraform"
  condition "services" {
   names = ["payments", "api"]
  }
