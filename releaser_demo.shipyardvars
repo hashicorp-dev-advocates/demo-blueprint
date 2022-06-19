@@ -3,5 +3,4 @@ install_minecraft=false
 install_browserless=false
 install_vault=false
 install_whiskers=false
-install_waypoint=false
 install_boundary=false

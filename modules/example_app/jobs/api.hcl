@@ -9,7 +9,7 @@ job "api-deployment" {
     network {
       mode = "bridge"
       port "http" {
-        to = "9090"
+        to = "3000"
       }
 
       # dynamic port for the metrics
@@ -25,14 +25,14 @@ job "api-deployment" {
       tags = ["metrics"]
       meta {
         metrics    = "prometheus"
-        job        = "${NOMAD_JOB_NAME}"
-        datacenter = "${node.datacenter}"
+        job        = NOMAD_JOB_NAME
+        datacenter = node.datacenter
       }
     }
 
     service {
       name = "api"
-      port = "9090"
+      port = "3000"
 
       connect {
         sidecar_service {
@@ -44,7 +44,7 @@ job "api-deployment" {
 
             upstreams {
               destination_name = "payments"
-              local_bind_port  = 9091
+              local_bind_port  = 3001
             }
           }
         }
@@ -62,7 +62,8 @@ job "api-deployment" {
 
       env {
         NAME          = "API V1"
-        UPSTREAM_URIS = "http://localhost:9091"
+        UPSTREAM_URIS = "http://localhost:3001"
+        LISTEN_ADDR   = "0.0.0.0:3000"
       }
 
       resources {
