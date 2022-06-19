@@ -74,7 +74,7 @@ template "generate_rift_config" {
 }
 
 exec_remote "generate_rift_config" {
-  depends_on = ["template.generate_rift_config"]
+  depends_on = ["template.generate_rift_config", "module.monitoring"]
 
   image {
     name = "shipyardrun/hashicorp-tools:v0.9.0"

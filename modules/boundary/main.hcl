@@ -14,6 +14,16 @@ template "boundary_setup" {
   source = <<-EOT
   #!/bin/bash
 
+  # module "getting-started" {
+  #   source  = "devops-rob/getting-started/boundary"
+  #   version = "0.1.2"
+  #   
+  #   login_account_password = "password"
+  #   login_account_name = "admin"
+  #   org_name = "hashicorp"
+  #   project_name = "default_project"
+  # }
+  
   # Create an auth method
   AUTH_METHOD_ID=$(boundary auth-methods create password \
     -name="#{{ .Vars.boundary_auth_method }}" \
@@ -65,6 +75,34 @@ template "boundary_setup" {
     -principal=$${USER_ID} \
     -recovery-config="/files/recovery.hcl" \
     -format="json" | jq
+
+  # Add user for api (MC player)
+  # Add team for api
+
+  # Add user for payments (MC player)
+  # Add team for api
+
+  # resource "boundary_account_password" "application" {
+  #   auth_method_id = var.boundary_auth_method_id
+  #   type           = "password"
+  #   login_name     = var.application_name
+  #   password       = var.boundary_account_password
+  # }
+
+  # resource "boundary_user" "application" {
+  #   name        = var.application_name
+  #   description = "user for ${var.application_name}"
+  #   account_ids = [
+  #     # boundary_account_password.application.id
+  #   ]
+  #   scope_id = var.boundary_org_id
+  # }
+
+  # resource "boundary_group" "application" {
+  #   name       = var.application_name
+  #   member_ids = [boundary_user.application.id]
+  #   scope_id   = var.boundary_org_id
+  # }
   EOT
 
   vars = {
@@ -79,7 +117,7 @@ template "boundary_setup" {
 }
 
 template "boundary_recovery" {
-  source      = <<-EOT
+  source = <<-EOT
   kms "aead" {
     purpose = "recovery"
     aead_type = "aes-gcm"
@@ -87,6 +125,7 @@ template "boundary_recovery" {
     key_id = "global_recovery"
   }
   EOT
+
   destination = "${data("boundary_setup")}/recovery.hcl"
 }
 
