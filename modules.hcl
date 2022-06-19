@@ -2,11 +2,16 @@ network "dc1" {
   subnet = "10.5.0.0/16"
 }
 
+copy "waypoint_root_ca" {
+  source      = "./certs"
+  destination = var.cn_nomad_client_host_volume.source
+}
+
 module "consul_nomad" {
   disabled = !var.install_nomad
 
-  depends_on = ["container.waypoint-odr"]
-  source     = "github.com/shipyard-run/blueprints?ref=d9446bfc97759e66b82b1fed60fd70c94ab98238/modules//consul-nomad"
+  //depends_on = ["container.waypoint-odr"]
+  source = "github.com/shipyard-run/blueprints?ref=694e825167a05d6ae035a0b91f90ee7e8b2d2384/modules//consul-nomad"
 }
 
 module "monitoring" {
@@ -59,9 +64,9 @@ module "whiskers" {
 }
 
 module "boundary" {
- disabled = var.install_boundary
+  disabled = !var.install_boundary
 
- source = "./modules/boundary"
+  source = "./modules/boundary"
 }
 
 module "cts" {

@@ -1,11 +1,8 @@
 job "ingress" {
 
-  datacenters = ["dc1"]
+  type = "system"
 
-  constraint {
-    attribute = "${attr.unique.hostname}"
-    value     = "1.client.local"
-  }
+  datacenters = ["dc1"]
 
   group "ingress" {
 
@@ -35,6 +32,11 @@ job "ingress" {
         static = 18084
         to     = 18084
       }
+      
+      port "waypoint-server" {
+        static = 19701
+        to     = 19701
+      }
 
       port "metrics" {
         to = "9102"
@@ -59,6 +61,11 @@ job "ingress" {
     service {
       name = "ingress-whiskers"
       port = "whiskers"
+    }
+    
+    service {
+      name = "ingress-waypoint"
+      port = "waypoint-server"
     }
 
     service {
@@ -109,6 +116,11 @@ job "ingress" {
                 name  = "finicky-whiskers"
                 hosts = ["whiskers.ingress.shipyard.run", "whiskers.hashiconf.hashicraft.com"]
               }
+              
+              service {
+                name  = "waypoint-server"
+                hosts = ["waypoint.ingress.shipyard.run", "waypoint.hashiconf.hashicraft.com"]
+              }
 
               service {
                 name  = "api"
@@ -152,6 +164,16 @@ job "ingress" {
 
               service {
                 name  = "finicky-whiskers"
+                hosts = ["*"]
+              }
+            }
+            
+            listener {
+              port     = 19701
+              protocol = "http"
+
+              service {
+                name  = "waypoint-server"
                 hosts = ["*"]
               }
             }

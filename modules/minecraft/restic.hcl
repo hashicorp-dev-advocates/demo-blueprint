@@ -1,4 +1,3 @@
-
 container "restic" {
   disabled = !var.minecraft_enable_backups
 

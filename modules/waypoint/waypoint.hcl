@@ -55,10 +55,6 @@ template "waypoint_odr" {
   destination = "${var.cn_nomad_client_host_volume.source}/Dockerfile.odr"
 }
 
-copy "waypoint_root_ca" {
-  source      = "${file_dir()}/../../certs"
-  destination = var.cn_nomad_client_host_volume.source
-}
 
 # If this tag is updated then the waypoint-server job needs the corresponding change
 variable "waypoint_odr_tag" {
@@ -67,6 +63,7 @@ variable "waypoint_odr_tag" {
 
 # Build a custom ODR with our certs
 container "waypoint-odr" {
+  disabled   = true
   depends_on = ["copy.waypoint_root_ca"]
 
   network {
@@ -124,19 +121,6 @@ container "registry" {
   }
 }
 
-
-template "waypoint-pack" {
-  source = <<-EOF
-    #!/bin/sh
-    
-    nomad-pack run \
-      --var="waypoint_odr_image=${var.cn_nomad_load_image}" \
-      /pack/nomad-pack-community-registry-main/packs/waypoint
-  EOF
-
-  destination = "${var.cn_nomad_client_host_volume.source}/install_waypoint.sh"
-}
-
 exec_remote "waypoint_pack" {
   depends_on = ["nomad_cluster.local"]
 
@@ -148,9 +132,11 @@ exec_remote "waypoint_pack" {
     name = "network.dc1"
   }
 
-  cmd = "/bin/bash"
+  cmd = "nomad-pack"
   args = [
-    "/scripts/install_waypoint.sh"
+    "run",
+    "--var=waypoint_odr_additional_certs=\"${file("../../certs/root.cert")}\"",
+    "/pack/nomad-pack-community-registry-main/packs/waypoint"
   ]
 
   # Mount a volume containing the config
