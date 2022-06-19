@@ -102,7 +102,7 @@ waypoint runner profile set \
   -name=nomad \
   -plugin-type=nomad \
   -env-var="NOMAD_ADDR=http://{{env "attr.unique.network.ip-address"}}:4646" \
-  -env-var="RELEASE_CONTROLLER_ADDR=http://{{env "attr.unique.network.ip-address"}}:18083" \
+  -env-var="CONSUL_RELEASER_ADDR=http://{{env "attr.unique.network.ip-address"}}:18083/v1/releases" \
   -env-var="WAYPOINT_SERVER_ADDR={{env "attr.unique.network.ip-address"}}:9701" \
   -env-var="WAYPOINT_SERVER_TLS=true" \
   -env-var="WAYPOINT_SERVER_TLS_SKIP_VERIFY=true" \
