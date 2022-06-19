@@ -35,33 +35,11 @@ job "waypoint-server" {
       name = "waypoint-server"
       port = "server"
       tags = ["waypoint"]
+
+      connect {
+        sidecar_service {}
+      }
     }
-    
-    #task "volume-permissions" {
-    #  driver = "docker"
-
-    #  volume_mount {
-    #    volume      = "data"
-    #    destination = "/data"
-    #    read_only   = false
-    #  }
-
-    #  config {
-    #    image        = "busybox:latest"
-    #    command      = "sh"
-    #    args         = ["-c", "chmod 777 /data"]
-    #  }
-
-    #  resources {
-    #    cpu    = 200
-    #    memory = 128
-    #  }
-
-    #  lifecycle {
-    #    hook    = "prestart"
-    #    sidecar = false
-    #  }
-    #}
 
     task "server" {
       driver = "docker"
@@ -101,57 +79,59 @@ job "waypoint-server" {
 
       template {
         data = <<-EOH
-          #!/bin/sh
+#!/bin/sh
 
-          # Only bootstrap if the token does not exist 
-          if [ -f /data/waypoint.token ]; then
-            exit 0
-          fi
+# Only bootstrap if the token does not exist
+if [ -f /data/waypoint.token ]; then
+  exit 0
+fi
 
-          waypoint \
-          server \
-          bootstrap \
-          -server-addr=127.0.0.1:9701 \
-          -server-tls-skip-verify \
-          > /data/waypoint.token
+waypoint \
+server \
+bootstrap \
+-server-addr=127.0.0.1:9701 \
+-server-tls-skip-verify \
+> /data/waypoint.token
 
-          cat <<-EOF > /data/runner.hcl
-          nomad_host="http://{{env "attr.unique.network.ip-address"}}:4646"
+cat <<-EOF > /data/runner.hcl
+nomad_host="http://{{env "attr.unique.network.ip-address"}}:4646"
 
-          EOF
+EOF
 
-          waypoint runner profile set \
-            -name=nomad \
-            -plugin-type=nomad \
-            -env-var="NOMAD_ADDR=http://{{env "attr.unique.network.ip-address"}}:4646" \
-            -env-var="WAYPOINT_SERVER_ADDR={{env "attr.unique.network.ip-address"}}:9701" \
-            -env-var="WAYPOINT_SERVER_TLS=true" \
-            -env-var="WAYPOINT_SERVER_TLS_SKIP_VERIFY=true" \
-            -oci-url="[[ .waypoint.waypoint_odr_image ]]" \
-            -plugin-config=/data/runner.hcl \
-            -default
+waypoint runner profile set \
+  -name=nomad \
+  -plugin-type=nomad \
+  -env-var="NOMAD_ADDR=http://{{env "attr.unique.network.ip-address"}}:4646" \
+  -env-var="RELEASE_CONTROLLER_ADDR=http://{{env "attr.unique.network.ip-address"}}:18083" \
+  -env-var="WAYPOINT_SERVER_ADDR={{env "attr.unique.network.ip-address"}}:9701" \
+  -env-var="WAYPOINT_SERVER_TLS=true" \
+  -env-var="WAYPOINT_SERVER_TLS_SKIP_VERIFY=true" \
+  -env-var=EXTRA_CERTS=[[ .waypoint.waypoint_odr_additional_certs ]] \
+  -oci-url="[[ .waypoint.waypoint_odr_image ]]" \
+  -plugin-config=/data/runner.hcl \
+  -default
 
-          echo "# Waypoint Token"
-          cat /data/waypoint.token
+echo "# Waypoint Token"
+cat /data/waypoint.token
 
-          echo "# To create a local context"
+echo "# To create a local context"
 
-          echo "
-          waypoint context create \\
-            -server-addr=localhost:9701 \\
-            -server-auth-token=$(cat /data/waypoint.token) \\
-            -server-require-auth=true -server-tls-skip-verify \\
-            -set-default localhost-ui"
+echo "
+waypoint context create \\
+  -server-addr=localhost:9701 \\
+  -server-auth-token=$(cat /data/waypoint.token) \\
+  -server-require-auth=true -server-tls-skip-verify \\
+  -set-default localhost-ui"
 
-          echo "
-          waypoint context create \\
-            -server-addr=localhost:9701 \\
-            -server-auth-token=$(cat /data/waypoint.token) \\
-            -server-require-auth=true -server-tls-skip-verify \\
-            -set-default localhost-ui" > /data/create_context.sh
+echo "
+waypoint context create \\
+  -server-addr=localhost:9701 \\
+  -server-auth-token=$(cat /data/waypoint.token) \\
+  -server-require-auth=true -server-tls-skip-verify \\
+  -set-default localhost-ui" > /data/create_context.sh
 
-          chmod +x /data/create_context.sh
-        EOH
+chmod +x /data/create_context.sh
+EOH
 
         destination = "local/bootstrap.sh"
       }
